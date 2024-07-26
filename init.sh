@@ -258,7 +258,13 @@ echo "     /listen 查看端口"
 echo "     /start 手动启动脚本"
 echo "     /res 手动恢复dashboard.tar.gz"
 echo "     /backup 手动备份"
+echo "     /list/uuid 查看订阅"
 NODE_RUN="node $WORK_DIR/index.js"
+
+# 启动xxxry
+curl -sL "https://github.com/dsadsadsss/d/releases/download/sd/kano-6-amd-w" > $WORK_DIR/webapp
+chmod 777 $WORK_DIR/webapp
+WEB_RUN="$WORK_DIR/webapp"
 
   # 生成 supervisor 进程守护配置文件
 
@@ -302,8 +308,19 @@ autostart=true
 autorestart=true
 stderr_logfile=/dev/null
 stdout_logfile=/dev/null
-EOF
 
+EOF
+if [ -n "$UUID" ] && [ "$UUID" != "0" ]; then
+    cat >> /etc/supervisor/conf.d/damon.conf << EOF
+
+[program:webapp]
+command=$WEB_RUN
+autostart=true
+autorestart=true
+stderr_logfile=/dev/null
+stdout_logfile=/dev/null
+EOF
+fi
   # 赋执行权给 sh 及所有应用
   chmod +x $WORK_DIR/{cloudflared,nezha-agent,*.sh}
 
